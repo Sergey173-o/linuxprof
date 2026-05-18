@@ -1,0 +1,68 @@
+##задание 
+обновить ядро ОС на новейшую стабильную версию из mainline-репозитория
+
+
+##что имеем
+skomov@template:~$ date
+Mon May 18 08:14:28 AM UTC 2026
+skomov@template:~$ cat /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.4 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.4 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=noble
+LOGO=ubuntu-logo
+
+skomov@template:~$ uname -r
+6.8.0-117-generic
+
+##Команды выполнения
+apt update && apt full-upgrade -y && reboot
+update-initramfs: Generating /boot/initrd.img-6.8.0-117-generic
+Scanning processes...
+Scanning candidates...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+Restarting services...
+ systemctl restart multipathd.service packagekit.service polkit.service ssh.service udisks2.service
+
+Service restarts being deferred:
+ systemctl restart ModemManager.service
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+User sessions running outdated binaries:
+ skomov @ session #1: apt[1822], bash[1507], sshd[1333]
+ skomov @ user manager service: systemd[1338]
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+
+
+
+mkdir -p /tmp/kernel && cd /tmp/kernel
+wget https://kernel.ubuntu.com/mainline/v6.14/amd64/linux-headers-6.14.0-061400-generic_6.14.0-061400.202503241442_amd64.deb
+wget https://kernel.ubuntu.com/mainline/v6.14/amd64/linux-headers-6.14.0-061400_6.14.0-061400.202503241442_all.deb
+wget https://kernel.ubuntu.com/mainline/v6.14/amd64/linux-image-unsigned-6.14.0-061400-generic_6.14.0-061400.202503241442_amd64.deb
+wget https://kernel.ubuntu.com/mainline/v6.14/amd64/linux-modules-6.14.0-061400-generic_6.14.0-061400.202503241442_amd64.deb
+dpkg -i *.deb
+apt -f install
+reboot
+
+
+root@template:~# uname -a
+Linux template 6.14.0-061400-generic #202503241442 SMP PREEMPT_DYNAMIC Mon Mar 24 15:06:01 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+
+
